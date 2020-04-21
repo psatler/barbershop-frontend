@@ -12,7 +12,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Styled Components
 - Polished
 - Unform/core and Unform/web
-
+- Yup (for handling errors)
 
 
 

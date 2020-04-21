@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useState, useContext } from 'react';
 import api from '../services/api';
 
 interface AuthState {
@@ -53,4 +53,23 @@ const AuthProvider: React.FC = ({ children }) => {
   );
 };
 
-export { AuthProvider, AuthContext };
+function isEmpty(obj: object): boolean {
+  return !obj || Object.keys(obj).length === 0;
+}
+
+function useAuth(): AuthContextData {
+  const context = useContext(AuthContext);
+  console.log('useAuth context', isEmpty(context));
+  // if component using this it is inside AuthContext.Provider (which is the AuthProvider component above)
+
+  // if (!context) {
+  //   throw new Error('useAuth must be used within a AuthProvider');
+  // }
+  if (isEmpty(context)) {
+    throw new Error('useAuth must be used within a AuthProvider');
+  }
+
+  return context;
+}
+
+export { AuthProvider, useAuth };

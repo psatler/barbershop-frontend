@@ -22,29 +22,34 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const { signIn } = useContext(AuthContext);
+  const { user, signIn } = useContext(AuthContext);
 
-  const handleSubmit = useCallback(async (data: SignInFormData) => {
-    try {
-      formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
+  console.log(user);
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('Email is required')
-          .email('Type a valid email'),
-        password: Yup.string().required('Password is required'),
-      });
+  const handleSubmit = useCallback(
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('Email is required')
+            .email('Type a valid email'),
+          password: Yup.string().required('Password is required'),
+        });
 
-      signIn({ email: data.email, password: data.password });
-    } catch (err) {
-      const errors = getValidationErrors(err);
-      formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
-    }
-  }, []);
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        signIn({ email: data.email, password: data.password });
+      } catch (err) {
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+      }
+    },
+    [signIn],
+  );
 
   return (
     <Container>

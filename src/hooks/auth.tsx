@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
 import api from '../services/api';
+import { isEmpty } from '../utils/objectUtils';
 
 interface AuthState {
   token: string;
@@ -66,10 +67,6 @@ const AuthProvider: React.FC = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-function isEmpty(obj: object): boolean {
-  return !obj || Object.keys(obj).length === 0;
-}
 
 function useAuth(): AuthContextData {
   const context = useContext(AuthContext);

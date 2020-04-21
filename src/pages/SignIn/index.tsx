@@ -42,8 +42,12 @@ const SignIn: React.FC = () => {
 
         signIn({ email: data.email, password: data.password });
       } catch (err) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+        }
+
+        // trigger a toast for a more generic error
       }
     },
     [signIn],

@@ -11,6 +11,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Prettier
 - Styled Components
 - Polished
+- Unform/core and Unform/web
+
 
 
 

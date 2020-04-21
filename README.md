@@ -13,6 +13,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Polished
 - Unform/core and Unform/web
 - Yup (for handling errors)
+- Axios
 
 
 

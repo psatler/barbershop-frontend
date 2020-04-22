@@ -3,6 +3,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import logoimg from '../../assets/logo.svg';
@@ -10,7 +11,7 @@ import logoimg from '../../assets/logo.svg';
 import Button from '../../componentes/Button';
 import Input from '../../componentes/Input';
 
-import { Container, Content, Background } from './styles';
+import { Container, Content, AnimationContainer, Background } from './styles';
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -41,27 +42,34 @@ const SignUp: React.FC = () => {
       <Background />
 
       <Content>
-        <img src={logoimg} alt="Barbershop" />
+        <AnimationContainer>
+          <img src={logoimg} alt="Barbershop" />
 
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Create an account</h1>
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <h1>Create an account</h1>
 
-          <Input name="name" icon={FiUser} type="text" placeholder="name" />
-          <Input name="email" icon={FiMail} type="text" placeholder="E-mail" />
-          <Input
-            name="password"
-            icon={FiLock}
-            type="password"
-            placeholder="Password"
-          />
+            <Input name="name" icon={FiUser} type="text" placeholder="name" />
+            <Input
+              name="email"
+              icon={FiMail}
+              type="text"
+              placeholder="E-mail"
+            />
+            <Input
+              name="password"
+              icon={FiLock}
+              type="password"
+              placeholder="Password"
+            />
 
-          <Button type="submit"> Sign up </Button>
-        </Form>
+            <Button type="submit"> Sign up </Button>
+          </Form>
 
-        <a href="login">
-          <FiArrowLeft />
-          Back to Log in
-        </a>
+          <Link to="/">
+            <FiArrowLeft />
+            Back to Log in
+          </Link>
+        </AnimationContainer>
       </Content>
     </Container>
   );

@@ -14,6 +14,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Unform/core and Unform/web
 - Yup (for handling errors)
 - Axios
+- [React Spring](https://www.react-spring.io/)
 
 
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { FiLogIn, FiMail } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -15,12 +15,14 @@ import Button from '../../componentes/Button';
 import Input from '../../componentes/Input';
 
 import { Container, Content, AnimationContainer, Background } from './styles';
+import api from '../../services/api';
 
 interface ForgotPasswordFormData {
   email: string;
 }
 
 const ForgotPassword: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
@@ -29,13 +31,13 @@ const ForgotPassword: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: ForgotPasswordFormData) => {
       try {
+        setLoading(true);
         formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
 
         const schema = Yup.object().shape({
           email: Yup.string()
             .required('Email is required')
             .email('Type a valid email'),
-          password: Yup.string().required('Password is required'),
         });
 
         await schema.validate(data, {
@@ -43,6 +45,15 @@ const ForgotPassword: React.FC = () => {
         });
 
         // recover pass
+        await api.post('/password/forgot', {
+          email: data.email,
+        });
+
+        addToast({
+          type: 'success',
+          title: 'Password recovery email sent',
+          description: `An email has been sent to <${data.email}> to confirm the password recovery. Check your inbox`,
+        });
 
         // history.push('/dashboard');
       } catch (err) {
@@ -60,6 +71,8 @@ const ForgotPassword: React.FC = () => {
           description:
             'An error has occurred while performing trying to recover your password.',
         });
+      } finally {
+        setLoading(false);
       }
     },
     [addToast],
@@ -81,7 +94,9 @@ const ForgotPassword: React.FC = () => {
               placeholder="E-mail"
             />
 
-            <Button type="submit">Recover Pass</Button>
+            <Button loading={loading} type="submit">
+              Recover Pass
+            </Button>
           </Form>
 
           <Link to="/">

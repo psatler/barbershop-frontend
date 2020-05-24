@@ -1,9 +1,9 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import { useToast } from '../../hooks/toast';
@@ -14,6 +14,7 @@ import Button from '../../componentes/Button';
 import Input from '../../componentes/Input';
 
 import { Container, Content, AnimationContainer, Background } from './styles';
+import api from '../../services/api';
 
 interface ResetPasswordFormData {
   password: string;
@@ -21,14 +22,17 @@ interface ResetPasswordFormData {
 }
 
 const ResetPassword: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
   const history = useHistory();
+  const location = useLocation();
 
   const handleSubmit = useCallback(
     async (data: ResetPasswordFormData) => {
       try {
+        setLoading(true);
         formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
 
         const schema = Yup.object().shape({
@@ -45,6 +49,18 @@ const ResetPassword: React.FC = () => {
         });
 
         // create API call
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        const { password, password_confirmation } = data;
+        const token = location.search.replace('?token=', '');
+
+        if (!token) {
+          throw new Error();
+        }
+        await api.post('/password/reset', {
+          password,
+          password_confirmation, // eslint-disable-line @typescript-eslint/camelcase
+          token,
+        });
 
         history.push('/');
       } catch (err) {
@@ -62,9 +78,11 @@ const ResetPassword: React.FC = () => {
           description:
             'An error has occurred while resetting your password. Try again later.',
         });
+      } finally {
+        setLoading(false);
       }
     },
-    [addToast, history],
+    [location.search, addToast, history],
   );
 
   return (
@@ -90,7 +108,9 @@ const ResetPassword: React.FC = () => {
               placeholder="Confirm password"
             />
 
-            <Button type="submit">Reset password</Button>
+            <Button loading={loading} type="submit">
+              Reset password
+            </Button>
           </Form>
 
           {/* <Link to="/signin">

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -22,6 +22,7 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
 
   const { signIn } = useAuth();
@@ -31,6 +32,7 @@ const SignIn: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
+        setLoading(true);
         formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
 
         const schema = Yup.object().shape({
@@ -62,6 +64,8 @@ const SignIn: React.FC = () => {
           description:
             'An error has occurred while performing login. Check your credentials.',
         });
+      } finally {
+        setLoading(false);
       }
     },
     [signIn, addToast, history],
@@ -89,7 +93,9 @@ const SignIn: React.FC = () => {
               placeholder="Password"
             />
 
-            <Button type="submit">Log in</Button>
+            <Button loading={loading} type="submit">
+              Log in
+            </Button>
 
             <Link to="/forgot-password">Forgot password</Link>
           </Form>

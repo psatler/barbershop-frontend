@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -24,6 +24,7 @@ interface SignUpFormData {
 }
 
 const SignUp: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const history = useHistory();
@@ -31,6 +32,7 @@ const SignUp: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: SignUpFormData) => {
       try {
+        setLoading(true);
         formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
 
         const schema = Yup.object().shape({
@@ -69,6 +71,8 @@ const SignUp: React.FC = () => {
           description:
             'An error has occurred when creating account. Try again.',
         });
+      } finally {
+        setLoading(false);
       }
     },
     [addToast, history],
@@ -99,7 +103,9 @@ const SignUp: React.FC = () => {
               placeholder="Password"
             />
 
-            <Button type="submit"> Sign up </Button>
+            <Button loading={loading} type="submit">
+              Sign up
+            </Button>
           </Form>
 
           <Link to="/">

@@ -37,6 +37,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Axios
 - [React Spring](https://www.react-spring.io/)
 - React Router DOM
+- [React Day Picker](https://react-day-picker.js.org/)
 
 
 

@@ -5,6 +5,8 @@ import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
 import { FiPower, FiClock } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import {
   Container,
   Header,
@@ -69,9 +71,15 @@ const Dashboard: React.FC = () => {
         })
         .then(response => {
           setMonthAvailability(response.data);
+        })
+        .catch((error: AxiosError) => {
+          // https://stackoverflow.com/questions/47216452/how-to-handle-401-authentication-error-in-axios-and-react
+          if (error.response?.status === 401) {
+            signOut();
+          }
         });
     },
-    [currentMonth, user.id],
+    [currentMonth, user.id, signOut],
   );
 
   useEffect(
@@ -93,9 +101,14 @@ const Dashboard: React.FC = () => {
           });
 
           setAppointments(appointmentsFormatted);
+        })
+        .catch((error: AxiosError) => {
+          if (error.response?.status === 401) {
+            signOut();
+          }
         });
     },
-    [selectedDate],
+    [selectedDate, signOut],
   );
 
   const disabledDays = useMemo(() => {
@@ -152,7 +165,9 @@ const Dashboard: React.FC = () => {
             <img src={user.avatar_url} alt={user.name} />
             <div>
               <span>Welcome,</span>
-              <strong>{user.name}</strong>
+              <Link to="/profile">
+                <strong>{user.name}</strong>
+              </Link>
             </div>
           </Profile>
 

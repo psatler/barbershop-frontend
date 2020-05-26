@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase  */
 import React, { useCallback, useRef, useState, ChangeEvent } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -21,7 +22,9 @@ import avatarPlaceholder from '../../assets/avatar-placeholder.png';
 interface ProfileFormData {
   name: string;
   email: string;
+  old_password: string;
   password: string;
+  password_confirmation: string;
 }
 
 const Profile: React.FC = () => {
@@ -43,21 +46,55 @@ const Profile: React.FC = () => {
           email: Yup.string()
             .required('Email is required')
             .email('Type a valid email'),
-          password: Yup.string().min(6, 'At least 6 characters'),
+          old_password: Yup.string(),
+          password: Yup.string().when('old_password', {
+            is: val => !!val.length,
+            then: Yup.string().required('Field is required'),
+            otherwise: Yup.string(),
+          }),
+          password_confirmation: Yup.string()
+            .when('old_password', {
+              is: val => !!val.length,
+              then: Yup.string().required('Field is required'),
+              otherwise: Yup.string(),
+            })
+            .oneOf([Yup.ref('password'), null], 'New passwords must match'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('users', data);
+        // handling when the user does not provide any new password, only updating name or email
+        const {
+          name,
+          email,
+          old_password,
+          password,
+          password_confirmation,
+        } = data;
+        const formData = {
+          name,
+          email,
+          ...(old_password
+            ? {
+                old_password,
+                password,
+                password_confirmation,
+              }
+            : {}),
+        };
 
-        history.push('/');
+        const response = await api.put('profile', formData);
+
+        updateUser(response.data);
+
+        history.push('/dashboard');
 
         addToast({
           type: 'success',
-          title: 'Account created!',
-          description: 'You can now log in to the GoBarber App',
+          title: 'Profile updated!',
+          description: 'Your profile data has been updated successfully.',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -70,15 +107,15 @@ const Profile: React.FC = () => {
         // trigger a toast for a more generic error
         addToast({
           type: 'error',
-          title: 'Account creation error',
+          title: 'Profile update error',
           description:
-            'An error has occurred when creating account. Try again.',
+            'An error has occurred when updating profile. Try again later.',
         });
       } finally {
         setLoading(false);
       }
     },
-    [addToast, history],
+    [addToast, history, updateUser],
   );
 
   const handleAvatarChange = useCallback(

@@ -24,6 +24,24 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 
 
+## How to run
+
+
+```
+yarn
+yarn start
+```
+
+To run tests and coverage report:
+
+```
+# tests
+yarn test
+
+# coverage
+yarn test --coverage --watchAll false
+```
+
 
 ## Dependencies
 

@@ -39,7 +39,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - React Router DOM
 - [React Day Picker](https://react-day-picker.js.org/)
 - [Date-fns@next]()
-
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
+- [React Hooks Testing Library](https://react-hooks-testing-library.com/)
 
 
 

@@ -104,7 +104,7 @@ function useAuth(): AuthContextData {
   //   throw new Error('useAuth must be used within a AuthProvider');
   // }
   if (isEmpty(context)) {
-    throw new Error('useAuth must be used within a AuthProvider');
+    // throw new Error('useAuth must be used within a AuthProvider');
   }
 
   return context;

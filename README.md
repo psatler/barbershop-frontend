@@ -40,6 +40,9 @@ yarn test
 
 # coverage
 yarn test --coverage --watchAll false
+
+  or via the package.json script
+yarn test:coverage
 ```
 
 

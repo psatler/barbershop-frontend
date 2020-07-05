@@ -26,6 +26,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## How to run
 
+Update the `.env` as shown in the `.env.example` with the URL address of the
+application. Locally, you can use this as `localhost`.
 
 ```
 yarn
